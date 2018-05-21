@@ -15,3 +15,5 @@ The original deed file `University_Michigan_Deed_KZA_85HRZB.zip` has an inconsis
 ## `fips_order` files
 For each record type, the file will list the last row for each county. This will give you a good indication of how long the extraction process will take. Note, the tax file should be considered approximate since the number of rows don't line up.
 
+**Tip:** these files are rendered as interactive tables and are searchable.
+
