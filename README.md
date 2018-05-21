@@ -11,3 +11,7 @@ Run `corelogic_data_extract.py` script. Script will terminate once it reaches th
 
 ## `deed` input file
 The original deed file `University_Michigan_Deed_KZA_85HRZB.zip` has an inconsistent number of columns in the file. `pandas` doesn't like this. I've manually edited these rows and created a new file as referenced in the script. This doesn't mean that the new file is error free (I'm 100% sure its not). It just means that each row now has the same number of columns.
+
+## `fips_order` files
+For each record type, the file will list the last row for each county. This will give you a good indication of how long the extraction process will take. Note, the tax file should be considered approximate since the number of rows don't line up.
+
