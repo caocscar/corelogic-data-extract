@@ -7,13 +7,13 @@ In the `Inputs` section of the script near the top, specify the following 3 vari
 2. the total number of records for all the counties of interest (consult the xlsx file with the county counts)
 3. record type; must be one of {'foreclosure','deed',tax'}
 
-Run `corelogic_data_extract.py` script. Script will terminate once it reaches the number of records. So runtime will be a function of what order your counties are located in the original file. The script will create a separate file for each county in the form of `fipscode_recordtype.txt`
+Run `corelogic_data_extract.py` script. Script will terminate once it reaches the number of records. So runtime will be a function of where  your counties are located in the file (see fips_order section). The script will create a separate file for each county in the form of `fipscode_recordtype.txt`
 
 ## `deed` input file
 The original deed file `University_Michigan_Deed_KZA_85HRZB.zip` has an inconsistent number of columns in the file. `pandas` doesn't like this. I've manually edited these rows and created a new file as referenced in the script. This doesn't mean that the new file is error free (I'm 100% sure its not). It just means that each row now has the same number of columns.
 
 ## `fips_order` files
-For each record type, the file will list the last row for each county. This will give you a good indication of how long the extraction process will take. Note, the tax file should be considered approximate since the number of rows don't line up.
+For each record type, the file will list the last row for each county. This will give you a good indication of how long the extraction process will take.
 
 **Tip:** these files are rendered as interactive tables and are searchable.
 
