@@ -15,6 +15,8 @@ pd.options.display.max_rows = 20
 # Inputs
 counties = [6001,6067]
 records = 452696+467796 # needs to be calculated
+recordtype = 'tax'
+assert recordtype in ['foreclosure','tax','deed']
 
 #%%
 parcel = {}
@@ -31,7 +33,6 @@ parcel['deed'] = {'directory':r'X:\ParcelData',
                   'lines':367782480,
                   }
 
-recordtype = 'tax'
 fips_col = 'FIPS CODE' if recordtype == 'tax' else 'FIPS'
 parcelinfo = parcel[recordtype]
 wdir = parcelinfo['directory']
