@@ -8,8 +8,8 @@ Created on Tue Oct 10 09:31:43 2017
 import pandas as pd
 import os
 import time
-from collections import Counter
 import json
+from collections import Counter
 
 pd.options.display.max_rows = 20
 
@@ -36,12 +36,12 @@ parcel_file = parcelinfo['filename']
 columns = parcelinfo['columns']
     
 f = pd.read_csv('fips_ordering_{}.csv'.format(recordtype))
-rows_of_interest = f[f['FIPS'].isin(counties)]
-skiprows = rows_of_interest['first_row'].min()
-cs = 200000
+matching_rows = f[f['FIPS'].isin(counties)]
+skiprows = matching_rows['first_row'].min()
+chunksize = 200000
 
 t0 = time.time()
-fin = pd.read_csv(os.path.join(wdir, parcel_file), quoting=3, sep='|', chunksize=cs, skiprows=skiprows, header=None)
+fin = pd.read_csv(os.path.join(wdir, parcel_file), quoting=3, sep='|', chunksize=chunksize, skiprows=skiprows, header=None)
 
 #%%
 t1 = time.time()
@@ -50,7 +50,7 @@ c = Counter()
 hitherto = 0
 for i, df in enumerate(fin):
     if i%5 == 0:
-        print(i*0.2, time.time()-t0)
+        print(i*chunksize/1000000, time.time()-t0)
     df.columns = columns
     data = df[df[fips_col].isin(counties)]
     if not data.empty:
@@ -65,8 +65,8 @@ for i, df in enumerate(fin):
         if hitherto >= records:
             break
 t2 = time.time()
-print('Process time {:.1f} mins with chunksize={}'.format((t2-t1)/60,cs))
-print('Processed lines per second: {:,.0f}'.format(i*cs/(t2-t1)) )
+print('Process time {:.1f} mins with chunksize={}'.format((t2-t1)/60,chunksize))
+print('Processed lines per second: {:,.0f}'.format(i*chunksize/(t2-t1)) )
 print('Records Extracted = {:,}'.format(hitherto))
 
 #%%
