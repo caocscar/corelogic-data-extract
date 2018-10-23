@@ -14,17 +14,17 @@ from collections import Counter
 pd.options.display.max_rows = 20
 
 # Inputs
-counties = [12025]
-records = 905240 # needs to be calculated
-recordtype = 'tax'
+counties = [26165]
+records = 47745 # needs to be calculated
+recordtype = 'deed'
 assert recordtype in {'foreclosure','tax','deed'}
 
-#%%
+#%% load parcel information
 with open('recordtype.json','r') as fin:
     parcel = json.load(fin)
-    
+# remove existing files since we will be appending to them
 for fips in counties:
-    fname = '{}_{}.txt'.format(fips,recordtype)
+    fname = f'{fips}_{recordtype}.txt'
     if os.path.isfile(fname):
         os.remove(fname)
 
@@ -34,8 +34,8 @@ parcelinfo = parcel[recordtype]
 wdir = parcelinfo['directory']
 parcel_file = parcelinfo['filename']
 columns = parcelinfo['columns']
-    
-f = pd.read_csv('fips_ordering_{}.csv'.format(recordtype))
+# calculate what row we can start on (for efficiency)    
+f = pd.read_csv(f'fips_ordering_{recordtype}.csv')
 matching_rows = f[f['FIPS'].isin(counties)]
 skiprows = matching_rows['first_row'].min()
 chunksize = 200000
@@ -45,7 +45,7 @@ fin = pd.read_csv(os.path.join(wdir, parcel_file), quoting=3, sep='|', chunksize
 
 #%%
 t1 = time.time()
-print('Skipping {:,} rows took {:.2f} mins'.format(skiprows,(t1-t0)/60) )
+print(f'Skipping {skiprows:,} rows took {(t1-t0)/60:.1f} mins')
 c = Counter()
 hitherto = 0
 for i, df in enumerate(fin):
@@ -57,7 +57,7 @@ for i, df in enumerate(fin):
         print(i, data.shape[0])
         c.update(data[fips_col])
         for fips, df_county in data.groupby(fips_col):
-            fname = '{}_{}.txt'.format(fips,recordtype)
+            fname = f'{fips}_{recordtype}.txt'
             header_flag = False if os.path.isfile(fname) else True
             with open(fname, 'a') as fout:
                 df_county.to_csv(fout, index=False, sep='|', quoting=3, header=header_flag, encoding='utf-8')
@@ -65,9 +65,9 @@ for i, df in enumerate(fin):
         if hitherto >= records:
             break
 t2 = time.time()
-print('Process time {:.1f} mins with chunksize={}'.format((t2-t1)/60,chunksize))
-print('Processed lines per second: {:,.0f}'.format(i*chunksize/(t2-t1)) )
-print('Records Extracted = {:,}'.format(hitherto))
+print(f'Process time {(t2-t1)/60:.1f} mins with chunksize={chunksize}')
+print(f'Processed lines per second: {i*chunksize/(t2-t1):,.0f}')
+print(f'Records Extracted = {hitherto:,}')
 
 #%%
 # convert float to ints, replace True/False with 1/0
@@ -83,8 +83,8 @@ def minify_file(filename):
 #%%
 t4 = time.time()
 for fips in counties:
-    filename = '{}_{}.txt'.format(fips,recordtype)
+    filename = f'{fips}_{recordtype}.txt'
     minify_file(filename)
 t5 = time.time()
-print('minification: {:.1f}s'.format(t5-t4) )
+print(f'minification: {t5-t4:.1f}s')
     
