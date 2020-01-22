@@ -44,6 +44,8 @@ skiprows = matching_rows['first_row'].min()
 chunksize = 200000
 
 t0 = time.time()
+if skiprows > 1000000:
+    print(f'Skipping {skiprows:,} rows to get to the first county. This may take several minutes.')
 fin = pd.read_csv(os.path.join(wdir, parcel_file), quoting=3, sep='|', chunksize=chunksize, skiprows=skiprows, header=None)
 
 #%%
