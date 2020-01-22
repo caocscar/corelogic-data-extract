@@ -4,18 +4,20 @@ Created on Tue Oct 10 09:31:43 2017
 
 @author: caoa
 """
-
 import pandas as pd
 import os
 import time
 import json
 from collections import Counter
+import warnings
+
+warnings.filterwarnings('ignore', category=pd.errors.DtypeWarning)
 
 pd.options.display.max_rows = 20
 
 # Inputs
-counties = [26017,26063,26075,26087,26091,26093,26115,26145,26147,26151,26157]
-records = [51859,32986,82270,44407,52129,84674,68207,95896,81653,31256,35494] # needs to be calculated
+counties = [26017,26063,26075,26087,26091,26151,26157]
+records = [51859,32986,82270,44407,52129,31256,35494] # needs to be calculated
 records = sum(records)
 recordtype = 'tax'
 assert recordtype in {'foreclosure','tax','deed'}
@@ -51,7 +53,7 @@ c = Counter()
 hitherto = 0
 for i, df in enumerate(fin):
     if i%5 == 0:
-        print(i*chunksize/1000000, time.time()-t0)
+        print(f'{i*chunksize/1000000:.1f}M, {time.time()-t0:.1f}s')
     df.columns = columns
     data = df[df[fips_col].isin(counties)]
     if not data.empty:
@@ -61,7 +63,7 @@ for i, df in enumerate(fin):
             fname = f'{fips}_{recordtype}.txt'
             header_flag = False if os.path.isfile(fname) else True
             with open(fname, 'a') as fout:
-                df_county.to_csv(fout, index=False, sep='|', quoting=3, header=header_flag, encoding='utf-8')
+                df_county.to_csv(fout, index=False, sep='|', quoting=3, header=header_flag, encoding='utf-8', line_terminator='\n')
         hitherto += data.shape[0]
         if hitherto >= records:
             break
@@ -89,3 +91,4 @@ for fips in counties:
 t5 = time.time()
 print(f'minification: {t5-t4:.1f}s')
     
+
