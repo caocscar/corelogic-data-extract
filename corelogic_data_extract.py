@@ -14,9 +14,10 @@ from collections import Counter
 pd.options.display.max_rows = 20
 
 # Inputs
-counties = [26165]
-records = 47745 # needs to be calculated
-recordtype = 'deed'
+counties = [26017,26063,26075,26087,26091,26093,26115,26145,26147,26151,26157]
+records = [51859,32986,82270,44407,52129,84674,68207,95896,81653,31256,35494] # needs to be calculated
+records = sum(records)
+recordtype = 'tax'
 assert recordtype in {'foreclosure','tax','deed'}
 
 #%% load parcel information

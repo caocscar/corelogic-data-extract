@@ -4,7 +4,7 @@ This repo contains a Python script to extract county level data.
 ## Instructions
 In the `Inputs` section of the script near the top, specify the following 3 variables:
 1. List of counties' fips codes you want to extract
-2. Total number of records for all the counties of interest (consult the xlsx file with the county counts)
+2. List of the corresponding number of records for all the counties in step 1 (consult the xlsx file for the county counts)
 3. Record type; must be one of `{'foreclosure','deed','tax'}`
 
 Run `corelogic_data_extract.py` script. Script will terminate once it reaches the number of records in #2. So runtime will be a function of where your counties are located in the file (see *fips_order* section). The script will create a separate file for each county with a nomenclature of `<fipscode>_<recordtype>.txt`
